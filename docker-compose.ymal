@@ -1,0 +1,18 @@
+version: '3.9'
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourPassword123
+      - MSSQL_PID=Express
+    ports:
+      - 1433:1433
+    command: >
+      sh -c '
+      /opt/mssql/bin/sqlservr & sleep 30 &&
+      /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P YourPassword123 -Q "CREATE LOGIN dev WITH PASSWORD = \"dev\"; 
+      CREATE USER dev FOR LOGIN dev; 
+      ALTER SERVER ROLE sysadmin ADD MEMBER dev;"
+      sleep infinity'
